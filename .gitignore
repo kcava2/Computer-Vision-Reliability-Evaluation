@@ -1,0 +1,14 @@
+# CIFAR-100 dataset — downloaded automatically by torchvision, do not commit
+data/
+
+# Trained model weights — too large for GitHub (>100 MB)
+trained models/*.pth
+
+# Generated output
+reliability_results.json
+
+# Python bytecode
+__pycache__/
+trained models/__pycache__/
+*.pyc
+*.pyo

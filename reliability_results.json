@@ -1,0 +1,132 @@
+{
+  "metadata": {
+    "timestamp": "2026-04-25T00:47:21",
+    "device": "cuda",
+    "dataset": "CIFAR-100 (train split, seed=42, 10000 test samples)",
+    "framework": "Model Reliability Score (MRS)"
+  },
+  "models": {
+    "AlexNet": {
+      "inference_summary": {
+        "baseline_D": {
+          "N": 10000,
+          "K": 4040,
+          "raw_error_rate": 0.404,
+          "pf": 0.404,
+          "accuracy_pct": 59.599999999999994
+        },
+        "shifted_Dprime": {
+          "N": 10000,
+          "K": 5039,
+          "raw_error_rate": 0.5039,
+          "pf": 0.5039
+        },
+        "perturbed_Dtilde": {
+          "N": 10000,
+          "K": 4069,
+          "raw_error_rate": 0.4069,
+          "pf": 0.4069
+        }
+      },
+      "metrics": {
+        "PS": {
+          "score": 0.596,
+          "bootstrap": {
+            "mean": 0.5958563,
+            "std": 0.004887553611982175,
+            "ci_lower": 0.5855975,
+            "ci_upper": 0.6054025
+          }
+        },
+        "DS": {
+          "score": 0.7527227722772277,
+          "bootstrap": {
+            "mean": 0.7522238453626695,
+            "std": 0.012071871335521261,
+            "ci_lower": 0.7275668829427845,
+            "ci_upper": 0.7742648553323768
+          }
+        },
+        "DepS": {
+          "score": 0.39749709652606213,
+          "c_bar": 0.7923536290943622,
+          "var_95_calibrated": 0.19957034386992456,
+          "cvar_calibrated": 0.2050058069478758,
+          "ece": 0.19647631422281267,
+          "bootstrap": {
+            "mean": 0.3974832300200742,
+            "std": 0.0011845529996752616,
+            "ci_lower": 0.395139485030126,
+            "ci_upper": 0.39980754079957764
+          }
+        },
+        "QoTS": {
+          "score": 0.9861595905353246,
+          "rho": -0.013840409464675315,
+          "t_stat": -1.3840351025613304,
+          "p_value": 0.16637860013359485,
+          "significant_at_0.05": false,
+          "pattern": "Random \u2014 failures are unpatterned and memoryless",
+          "bootstrap": {
+            "mean": 0.9920418371561622,
+            "std": 0.005943016465557042,
+            "ci_lower": 0.9777472310652211,
+            "ci_upper": 0.9995835456198888
+          }
+        },
+        "AS": {
+          "score": 0.6731837051766603,
+          "mtbf": 3.419591836734694,
+          "mttr": 1.6601387188902488,
+          "bootstrap": {
+            "mean": 0.6721067369808656,
+            "std": 0.003719035115577927,
+            "ci_lower": 0.6647174192341031,
+            "ci_upper": 0.6790812456444331
+          }
+        }
+      },
+      "mrs": {
+        "equal_weights": {
+          "weights": [
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2
+          ],
+          "score": 0.6233156743209995,
+          "bootstrap": {
+            "mean": 0.6234367485644398,
+            "std": 0.0018808583078619903,
+            "ci_lower": 0.619860535282791,
+            "ci_upper": 0.6272632155139464
+          }
+        }
+      },
+      "statistical_tests": {
+        "mann_whitney_u": {
+          "description": "Failure confidences: baseline D vs shifted D_prime",
+          "statistic": 10446273.5,
+          "pvalue": 0.031142429527884017,
+          "significant_at_0.05": true
+        }
+      },
+      "config": {
+        "w_I": 0.5,
+        "w_II": 0.5,
+        "alpha": 0.95,
+        "ece_bins": 15,
+        "sigma": 0.25,
+        "weights_equal": [
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.2
+        ],
+        "bootstrap_n": 1000
+      }
+    }
+  }
+}

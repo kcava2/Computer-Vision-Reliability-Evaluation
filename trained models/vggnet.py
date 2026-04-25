@@ -1,0 +1,95 @@
+import os
+import sys
+import argparse
+import torch
+import torch.nn as nn
+
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from dataloader import get_loaders
+
+
+class VGG16(nn.Module):
+    def __init__(self, num_classes=1000):
+        super().__init__()
+        cfg = [64, 64, 'M', 128, 128, 'M', 256, 256, 256, 'M', 512, 512, 512, 'M', 512, 512, 512, 'M']
+        layers = []
+        in_channels = 3
+        for v in cfg:
+            if v == 'M':
+                layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
+            else:
+                layers += [nn.Conv2d(in_channels, v, kernel_size=3, padding=1), nn.ReLU(inplace=True)]
+                in_channels = v
+        self.features = nn.Sequential(*layers)
+        self.avgpool = nn.AdaptiveAvgPool2d((7, 7))
+        self.classifier = nn.Sequential(
+            nn.Linear(512 * 7 * 7, 4096),
+            nn.ReLU(inplace=True),
+            nn.Dropout(),
+            nn.Linear(4096, 4096),
+            nn.ReLU(inplace=True),
+            nn.Dropout(),
+            nn.Linear(4096, num_classes),
+        )
+
+    def forward(self, x):
+        x = self.features(x)
+        x = self.avgpool(x)
+        x = torch.flatten(x, 1)
+        x = self.classifier(x)
+        return x
+
+
+def train_one_epoch(model, loader, criterion, optimizer, device, epoch, total_epochs):
+    model.train()
+    running_loss, correct, total = 0.0, 0, 0
+    num_batches = len(loader)
+    for batch_idx, (images, labels) in enumerate(loader):
+        if batch_idx == 0:
+            print(f'  batch 1: data fetched, moving to {device}...', flush=True)
+        images, labels = images.to(device), labels.to(device)
+        if batch_idx == 0:
+            print(f'  batch 1: data on {device}, running forward pass...', flush=True)
+        optimizer.zero_grad()
+        outputs = model(images)
+        if batch_idx == 0:
+            print(f'  batch 1: forward done, running backward...', flush=True)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss.item() * images.size(0)
+        correct += outputs.argmax(1).eq(labels).sum().item()
+        total += images.size(0)
+        if (batch_idx + 1) % 10 == 0 or (batch_idx + 1) == num_batches:
+            print(f'  [{epoch}/{total_epochs}] batch {batch_idx+1}/{num_batches}  '
+                  f'loss {running_loss/total:.4f}  acc {100.*correct/total:.2f}%', flush=True)
+    return running_loss / total, 100.0 * correct / total
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--batch-size', type=int, default=16)
+    parser.add_argument('--epochs', type=int, default=50)
+    parser.add_argument('--num-workers', type=int, default=0)
+    args = parser.parse_args()
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    print(f'Using device: {device}')
+
+    train_loader, _ = get_loaders(batch_size=args.batch_size, num_workers=args.num_workers)
+
+    model = VGG16(num_classes=100).to(device)
+    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=5e-4)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
+
+    checkpoint_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vgg16.pth')
+
+    for epoch in range(1, args.epochs + 1):
+        train_loss, train_acc = train_one_epoch(model, train_loader, criterion, optimizer, device, epoch, args.epochs)
+        scheduler.step()
+        print(f'Epoch {epoch:3d}/{args.epochs}  Train Loss: {train_loss:.4f}  Train Acc: {train_acc:.2f}%')
+
+    torch.save(model.state_dict(), checkpoint_path)
+    print(f'Saved model to {checkpoint_path}')
