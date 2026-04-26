@@ -19,7 +19,7 @@ class VGG16(nn.Module):
             if v == 'M':
                 layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
             else:
-                layers += [nn.Conv2d(in_channels, v, kernel_size=3, padding=1), nn.ReLU(inplace=True)]
+                layers += [nn.Conv2d(in_channels, v, kernel_size=3, padding=1), nn.BatchNorm2d(v), nn.ReLU(inplace=True)]
                 in_channels = v
         self.features = nn.Sequential(*layers)
         self.avgpool = nn.AdaptiveAvgPool2d((7, 7))
@@ -41,29 +41,19 @@ class VGG16(nn.Module):
         return x
 
 
-def train_one_epoch(model, loader, criterion, optimizer, device, epoch, total_epochs):
+def train_one_epoch(model, loader, criterion, optimizer, device):
     model.train()
     running_loss, correct, total = 0.0, 0, 0
-    num_batches = len(loader)
-    for batch_idx, (images, labels) in enumerate(loader):
-        if batch_idx == 0:
-            print(f'  batch 1: data fetched, moving to {device}...', flush=True)
+    for images, labels in loader:
         images, labels = images.to(device), labels.to(device)
-        if batch_idx == 0:
-            print(f'  batch 1: data on {device}, running forward pass...', flush=True)
         optimizer.zero_grad()
         outputs = model(images)
-        if batch_idx == 0:
-            print(f'  batch 1: forward done, running backward...', flush=True)
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
         running_loss += loss.item() * images.size(0)
         correct += outputs.argmax(1).eq(labels).sum().item()
         total += images.size(0)
-        if (batch_idx + 1) % 10 == 0 or (batch_idx + 1) == num_batches:
-            print(f'  [{epoch}/{total_epochs}] batch {batch_idx+1}/{num_batches}  '
-                  f'loss {running_loss/total:.4f}  acc {100.*correct/total:.2f}%', flush=True)
     return running_loss / total, 100.0 * correct / total
 
 
@@ -87,7 +77,7 @@ if __name__ == '__main__':
     checkpoint_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vgg16.pth')
 
     for epoch in range(1, args.epochs + 1):
-        train_loss, train_acc = train_one_epoch(model, train_loader, criterion, optimizer, device, epoch, args.epochs)
+        train_loss, train_acc = train_one_epoch(model, train_loader, criterion, optimizer, device)
         scheduler.step()
         print(f'Epoch {epoch:3d}/{args.epochs}  Train Loss: {train_loss:.4f}  Train Acc: {train_acc:.2f}%')
 

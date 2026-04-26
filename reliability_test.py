@@ -24,8 +24,11 @@ warnings.filterwarnings('ignore', category=DeprecationWarning, module='torchvisi
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 MODELS_DIR = os.path.join(PROJECT_ROOT, 'trained models')
 
+RELIABILITY_DIR = os.path.join(PROJECT_ROOT, 'reliability backend')
+
 sys.path.insert(0, PROJECT_ROOT)
 sys.path.insert(0, MODELS_DIR)
+sys.path.insert(0, RELIABILITY_DIR)
 
 from reliability_datasets import get_reliability_loaders
 from reliability_metrics import ReliabilityEvaluator

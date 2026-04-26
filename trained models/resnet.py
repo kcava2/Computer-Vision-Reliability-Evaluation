@@ -74,11 +74,10 @@ class ResNet50(nn.Module):
         return x
 
 
-def train_one_epoch(model, loader, criterion, optimizer, device, epoch, total_epochs):
+def train_one_epoch(model, loader, criterion, optimizer, device):
     model.train()
     running_loss, correct, total = 0.0, 0, 0
-    num_batches = len(loader)
-    for batch_idx, (images, labels) in enumerate(loader):
+    for images, labels in loader:
         images, labels = images.to(device), labels.to(device)
         optimizer.zero_grad()
         outputs = model(images)
@@ -88,15 +87,12 @@ def train_one_epoch(model, loader, criterion, optimizer, device, epoch, total_ep
         running_loss += loss.item() * images.size(0)
         correct += outputs.argmax(1).eq(labels).sum().item()
         total += images.size(0)
-        if (batch_idx + 1) % 10 == 0 or batch_idx == 0 or (batch_idx + 1) == num_batches:
-            print(f'  [{epoch}/{total_epochs}] batch {batch_idx+1}/{num_batches}  '
-                  f'loss {running_loss/total:.4f}  acc {100.*correct/total:.2f}%', flush=True)
     return running_loss / total, 100.0 * correct / total
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--batch-size', type=int, default=128)
+    parser.add_argument('--batch-size', type=int, default=32)
     parser.add_argument('--epochs', type=int, default=50)
     parser.add_argument('--num-workers', type=int, default=0)
     args = parser.parse_args()
@@ -114,7 +110,7 @@ if __name__ == '__main__':
     checkpoint_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'resnet50.pth')
 
     for epoch in range(1, args.epochs + 1):
-        train_loss, train_acc = train_one_epoch(model, train_loader, criterion, optimizer, device, epoch, args.epochs)
+        train_loss, train_acc = train_one_epoch(model, train_loader, criterion, optimizer, device)
         scheduler.step()
         print(f'Epoch {epoch:3d}/{args.epochs}  Train Loss: {train_loss:.4f}  Train Acc: {train_acc:.2f}%')
 
