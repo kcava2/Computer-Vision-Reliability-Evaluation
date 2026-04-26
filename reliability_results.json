@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2026-04-25T00:47:21",
+    "timestamp": "2026-04-26T11:13:20",
     "device": "cuda",
     "dataset": "CIFAR-100 (train split, seed=42, 10000 test samples)",
     "framework": "Model Reliability Score (MRS)"
@@ -17,15 +17,15 @@
         },
         "shifted_Dprime": {
           "N": 10000,
-          "K": 5039,
-          "raw_error_rate": 0.5039,
-          "pf": 0.5039
+          "K": 5004,
+          "raw_error_rate": 0.5004,
+          "pf": 0.5004
         },
         "perturbed_Dtilde": {
           "N": 10000,
-          "K": 4069,
-          "raw_error_rate": 0.4069,
-          "pf": 0.4069
+          "K": 4070,
+          "raw_error_rate": 0.407,
+          "pf": 0.407
         }
       },
       "metrics": {
@@ -39,12 +39,12 @@
           }
         },
         "DS": {
-          "score": 0.7527227722772277,
+          "score": 0.7613861386138616,
           "bootstrap": {
-            "mean": 0.7522238453626695,
-            "std": 0.012071871335521261,
-            "ci_lower": 0.7275668829427845,
-            "ci_upper": 0.7742648553323768
+            "mean": 0.7612557768211178,
+            "std": 0.011980889353363411,
+            "ci_lower": 0.7375290806498396,
+            "ci_upper": 0.7832691678310235
           }
         },
         "DepS": {
@@ -75,14 +75,14 @@
           }
         },
         "AS": {
-          "score": 0.6731837051766603,
-          "mtbf": 3.419591836734694,
-          "mttr": 1.6601387188902488,
+          "score": 0.6731033758817464,
+          "mtbf": 3.4191836734693877,
+          "mttr": 1.660546715626275,
           "bootstrap": {
-            "mean": 0.6721067369808656,
-            "std": 0.003719035115577927,
-            "ci_lower": 0.6647174192341031,
-            "ci_upper": 0.6790812456444331
+            "mean": 0.671989153395268,
+            "std": 0.0037605152175941383,
+            "ci_lower": 0.6643935919227246,
+            "ci_upper": 0.6791995706763121
           }
         }
       },
@@ -95,20 +95,264 @@
             0.2,
             0.2
           ],
-          "score": 0.6233156743209995,
+          "score": 0.6244786722629163,
           "bootstrap": {
-            "mean": 0.6234367485644398,
-            "std": 0.0018808583078619903,
-            "ci_lower": 0.619860535282791,
-            "ci_upper": 0.6272632155139464
+            "mean": 0.6246458230249897,
+            "std": 0.0019238751005059979,
+            "ci_lower": 0.6209423613584911,
+            "ci_upper": 0.6283322311038668
           }
         }
       },
       "statistical_tests": {
         "mann_whitney_u": {
           "description": "Failure confidences: baseline D vs shifted D_prime",
-          "statistic": 10446273.5,
-          "pvalue": 0.031142429527884017,
+          "statistic": 10443669.5,
+          "pvalue": 0.006555956880710818,
+          "significant_at_0.05": true
+        }
+      },
+      "config": {
+        "w_I": 0.5,
+        "w_II": 0.5,
+        "alpha": 0.95,
+        "ece_bins": 15,
+        "sigma": 0.25,
+        "weights_equal": [
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.2
+        ],
+        "bootstrap_n": 1000
+      }
+    },
+    "VGG16": {
+      "inference_summary": {
+        "baseline_D": {
+          "N": 10000,
+          "K": 2998,
+          "raw_error_rate": 0.2998,
+          "pf": 0.2998,
+          "accuracy_pct": 70.02
+        },
+        "shifted_Dprime": {
+          "N": 10000,
+          "K": 3649,
+          "raw_error_rate": 0.3649,
+          "pf": 0.3649
+        },
+        "perturbed_Dtilde": {
+          "N": 10000,
+          "K": 3129,
+          "raw_error_rate": 0.3129,
+          "pf": 0.3129
+        }
+      },
+      "metrics": {
+        "PS": {
+          "score": 0.7001999999999999,
+          "bootstrap": {
+            "mean": 0.7001174,
+            "std": 0.004415814448094486,
+            "ci_lower": 0.6912,
+            "ci_upper": 0.708405
+          }
+        },
+        "DS": {
+          "score": 0.7828552368245497,
+          "bootstrap": {
+            "mean": 0.7829492991556432,
+            "std": 0.01340034208186988,
+            "ci_lower": 0.7571901557560112,
+            "ci_upper": 0.8093684599605007
+          }
+        },
+        "DepS": {
+          "score": 0.4082105217802028,
+          "c_bar": 0.8108198965445161,
+          "var_95_calibrated": 0.17526859990209337,
+          "cvar_calibrated": 0.1835789564395944,
+          "ece": 0.11061989654451605,
+          "bootstrap": {
+            "mean": 0.4082839580567537,
+            "std": 0.0011512259134368243,
+            "ci_lower": 0.40605650727165565,
+            "ci_upper": 0.41045001278430615
+          }
+        },
+        "QoTS": {
+          "score": 0.9924299864147874,
+          "rho": -0.0075700135852126245,
+          "t_stat": -0.7569473433845024,
+          "p_value": 0.44909924715565036,
+          "significant_at_0.05": false,
+          "pattern": "Random \u2014 failures are unpatterned and memoryless",
+          "bootstrap": {
+            "mean": 0.9922844504396677,
+            "std": 0.005928872044834143,
+            "ci_lower": 0.9774817046241501,
+            "ci_upper": 0.9996195416491269
+          }
+        },
+        "AS": {
+          "score": 0.7425789815060936,
+          "mtbf": 4.184601113172541,
+          "mttr": 1.450625869262865,
+          "bootstrap": {
+            "mean": 0.7423649258229633,
+            "std": 0.0033784312052436262,
+            "ci_lower": 0.7353693760988526,
+            "ci_upper": 0.7489354853809101
+          }
+        }
+      },
+      "mrs": {
+        "equal_weights": {
+          "weights": [
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2
+          ],
+          "score": 0.6658196565385969,
+          "bootstrap": {
+            "mean": 0.6657155062949507,
+            "std": 0.0020956472113070794,
+            "ci_lower": 0.6616556683216273,
+            "ci_upper": 0.6699556414446244
+          }
+        }
+      },
+      "statistical_tests": {
+        "mann_whitney_u": {
+          "description": "Failure confidences: baseline D vs shifted D_prime",
+          "statistic": 5811920.5,
+          "pvalue": 1.1130435269697522e-05,
+          "significant_at_0.05": true
+        }
+      },
+      "config": {
+        "w_I": 0.5,
+        "w_II": 0.5,
+        "alpha": 0.95,
+        "ece_bins": 15,
+        "sigma": 0.25,
+        "weights_equal": [
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.2
+        ],
+        "bootstrap_n": 1000
+      }
+    },
+    "ResNet50": {
+      "inference_summary": {
+        "baseline_D": {
+          "N": 10000,
+          "K": 2623,
+          "raw_error_rate": 0.2623,
+          "pf": 0.2623,
+          "accuracy_pct": 73.77
+        },
+        "shifted_Dprime": {
+          "N": 10000,
+          "K": 3628,
+          "raw_error_rate": 0.3628,
+          "pf": 0.3628
+        },
+        "perturbed_Dtilde": {
+          "N": 10000,
+          "K": 2775,
+          "raw_error_rate": 0.2775,
+          "pf": 0.2775
+        }
+      },
+      "metrics": {
+        "PS": {
+          "score": 0.7377,
+          "bootstrap": {
+            "mean": 0.7376265000000001,
+            "std": 0.004244745899344267,
+            "ci_lower": 0.7294,
+            "ci_upper": 0.7458025
+          }
+        },
+        "DS": {
+          "score": 0.6168509340449865,
+          "bootstrap": {
+            "mean": 0.6165772458164425,
+            "std": 0.018902326754745298,
+            "ci_lower": 0.579227782571182,
+            "ci_upper": 0.6550082576662454
+          }
+        },
+        "DepS": {
+          "score": 0.42970045719011263,
+          "c_bar": 0.8562674507915974,
+          "var_95_calibrated": 0.1346196129500866,
+          "cvar_calibrated": 0.14059908561977474,
+          "ece": 0.11856745079159739,
+          "bootstrap": {
+            "mean": 0.4296953713736729,
+            "std": 0.001001272018297789,
+            "ci_lower": 0.427835655924966,
+            "ci_upper": 0.4315374124315769
+          }
+        },
+        "QoTS": {
+          "score": 0.9969920708988306,
+          "rho": -0.0030079291011694703,
+          "t_stat": -0.3007641899275763,
+          "p_value": 0.7636005709766791,
+          "significant_at_0.05": false,
+          "pattern": "Random \u2014 failures are unpatterned and memoryless",
+          "bootstrap": {
+            "mean": 0.99225874646379,
+            "std": 0.006215011080948191,
+            "ci_lower": 0.9764749029687066,
+            "ci_upper": 0.9996483583335228
+          }
+        },
+        "AS": {
+          "score": 0.7688003148314848,
+          "mtbf": 4.6115,
+          "mttr": 1.3868065967016492,
+          "bootstrap": {
+            "mean": 0.7687871962422202,
+            "std": 0.0032872842556040407,
+            "ci_lower": 0.762372201973854,
+            "ci_upper": 0.7752206896580169
+          }
+        }
+      },
+      "mrs": {
+        "equal_weights": {
+          "weights": [
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2
+          ],
+          "score": 0.6572332463639131,
+          "bootstrap": {
+            "mean": 0.6566753747327876,
+            "std": 0.00371076139678245,
+            "ci_lower": 0.6490441162718376,
+            "ci_upper": 0.6635825203316323
+          }
+        }
+      },
+      "statistical_tests": {
+        "mann_whitney_u": {
+          "description": "Failure confidences: baseline D vs shifted D_prime",
+          "statistic": 4990898.0,
+          "pvalue": 0.0009468238917965734,
           "significant_at_0.05": true
         }
       },
