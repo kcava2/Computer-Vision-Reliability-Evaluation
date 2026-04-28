@@ -88,7 +88,7 @@ if __name__ == '__main__':
 
     # Build three dataloaders once — shared across all models
     print('\nPreparing reliability dataloaders ...')
-    loader_D, loader_Dprime, loader_Dtilde = get_reliability_loaders(
+    loader_D, loader_Dprime, loader_Dtilde, dataset_info = get_reliability_loaders(
         data_dir=os.path.join(PROJECT_ROOT, 'data'),
         batch_size=128,
         num_workers=0,
@@ -96,6 +96,9 @@ if __name__ == '__main__':
     print(f'  Baseline D       : {len(loader_D.dataset):,} images')
     print(f'  Shifted D_prime  : {len(loader_Dprime.dataset):,} images')
     print(f'  Perturbed D_tilde: {len(loader_Dtilde.dataset):,} images')
+    print(f'\n  D_tilde transform distribution:')
+    for name, count in sorted(dataset_info['transform_dist'].items()):
+        print(f'    {name:<25}: {count:,}')
 
     all_results = {}
 
@@ -118,7 +121,7 @@ if __name__ == '__main__':
         print(f'  Loaded checkpoint: {os.path.basename(cfg["checkpoint"])}')
 
         evaluator = ReliabilityEvaluator(model, device, config=None)
-        results = evaluator.compute_all_metrics(loader_D, loader_Dprime, loader_Dtilde)
+        results = evaluator.compute_all_metrics(loader_D, loader_Dprime, loader_Dtilde, dataset_info=dataset_info)
         evaluator.print_report(results, model_name=cfg['name'])
 
         all_results[cfg['name']] = results
