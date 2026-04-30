@@ -381,12 +381,23 @@ class ReliabilityEvaluator:
     # Composite MRS
     # ------------------------------------------------------------------
 
+    _METRIC_NAMES = ['P_s', 'DS', 'DepS*', 'QoTS', 'AS']
+
     def compute_mrs(self, scores, weights):
         """Weighted harmonic mean. None scores are excluded; remaining weights renormalize
         automatically via the sum(w)/sum(w/s) formula."""
-        pairs = [(s, w) for s, w in zip(scores, weights) if s is not None]
+        pairs = []
+        for i, (s, w) in enumerate(zip(scores, weights)):
+            if s is None:
+                continue
+            if s == 0.0:
+                name = self._METRIC_NAMES[i] if i < len(self._METRIC_NAMES) else f'metric_{i}'
+                print(f'WARNING: {name} = 0.0 exactly. Using epsilon=1e-6 for MRS computation. '
+                      f'Investigate metric computation.')
+                s = 1e-6
+            pairs.append((s, w))
         w = np.array([w for _, w in pairs], dtype=np.float64)
-        s = np.array([max(sc, 1e-9) for sc, _ in pairs], dtype=np.float64)
+        s = np.array([sc for sc, _ in pairs], dtype=np.float64)
         return float(np.sum(w) / np.sum(w / s))
 
     # ------------------------------------------------------------------
@@ -408,6 +419,52 @@ class ReliabilityEvaluator:
                 score = float('nan')
             bs_scores.append(float('nan') if score is None else score)
         arr = np.array(bs_scores)
+        arr = arr[~np.isnan(arr)]
+        if len(arr) == 0:
+            return {'mean': float('nan'), 'std': float('nan'),
+                    'ci_lower': float('nan'), 'ci_upper': float('nan')}
+        return {
+            'mean': float(np.mean(arr)),
+            'std': float(np.std(arr)),
+            'ci_lower': float(np.percentile(arr, 2.5)),
+            'ci_upper': float(np.percentile(arr, 97.5)),
+        }
+
+    def _bootstrap_qots(self, r_D, n=None):
+        """Bootstrap QoTS with per-iteration retry when a resample produces fewer than
+        10 critical-failure intervals.  Retries up to 100 times before skipping the
+        iteration.  Reports the fraction of successful resamples."""
+        n = n or self.config['bootstrap_n']
+        N = r_D['N']
+        rng = np.random.default_rng(42)
+        min_intervals = 10
+        max_retries = 100
+        bs_scores = []
+        n_skipped = 0
+
+        for _ in range(n):
+            score = None
+            for attempt in range(max_retries + 1):
+                idx = rng.integers(0, N, size=N)
+                bs_r = self._rebuild_result(r_D, idx)
+                qots_d = self.compute_qots(bs_r)
+                if qots_d['score'] is not None:
+                    intervals_n = qots_d.get('intervals_n', 0)
+                    if intervals_n is None or intervals_n < min_intervals:
+                        continue
+                    score = float(qots_d['score'])
+                    break
+            if score is None:
+                n_skipped += 1
+            else:
+                bs_scores.append(score)
+
+        if n_skipped > 0:
+            frac = n_skipped / n
+            print(f'  QoTS bootstrap: {n_skipped}/{n} iterations skipped '
+                  f'({frac:.1%} insufficient intervals after {max_retries} retries).')
+
+        arr = np.array(bs_scores) if bs_scores else np.array([])
         arr = arr[~np.isnan(arr)]
         if len(arr) == 0:
             return {'mean': float('nan'), 'std': float('nan'),
@@ -547,10 +604,7 @@ class ReliabilityEvaluator:
         ps_ci = self.bootstrap_confidence_interval(r_D, self.compute_probability_score)
         ds_ci = self._bootstrap_durability(r_D, r_Dprime)
         deps_ci = self.bootstrap_confidence_interval(r_D, self.compute_dependability_score)
-        qots_ci = (
-            self.bootstrap_confidence_interval(r_D, lambda r: self.compute_qots(r)['score'])
-            if qots is not None else None
-        )
+        qots_ci = self._bootstrap_qots(r_D) if qots is not None else None
         as_ci = self.bootstrap_confidence_interval(r_Dtilde, self.compute_availability_score)
         mrs_equal_ci = self._bootstrap_mrs(r_D, r_Dprime, r_Dtilde, self.config['weights_equal'],
                                            seed=44)

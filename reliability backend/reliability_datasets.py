@@ -150,7 +150,7 @@ class FFTReconstructionDataset(Dataset):
     Simulates distribution shift by removing high-frequency content.
     """
 
-    def __init__(self, base_cifar, indices, radius=8):
+    def __init__(self, base_cifar, indices, radius=12):
         self.base_cifar = base_cifar
         self.indices = indices
         self.radius = radius
@@ -209,7 +209,7 @@ def get_reliability_loaders(
     seed=42,
     train_ratio=0.8,
     sigma=0.1,
-    fft_radius=8,
+    fft_radius=12,
 ):
     """Return three dataloaders and dataset metadata for MRS evaluation.
 

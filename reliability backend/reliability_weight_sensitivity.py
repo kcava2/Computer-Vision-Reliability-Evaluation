@@ -32,7 +32,11 @@ except ImportError:
     HAS_MPL = False
     print('WARNING: matplotlib not installed — chart will not be generated.')
 
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(_SCRIPT_DIR)   # reliability backend/ -> project root
+RESULTS_DIR = os.path.join(PROJECT_ROOT, 'results')
+FIGURES_DIR = os.path.join(PROJECT_ROOT, 'figures')
+os.makedirs(FIGURES_DIR, exist_ok=True)
 
 # -----------------------------------------------------------------------
 # Configuration
@@ -63,7 +67,7 @@ def _load_model_data():
     models = {}
 
     # Try new combined diagnostics file
-    combined = os.path.join(PROJECT_ROOT, 'all_models_reliability_diagnostics.json')
+    combined = os.path.join(RESULTS_DIR, 'all_models_reliability_diagnostics.json')
     if os.path.exists(combined):
         with open(combined) as f:
             data = json.load(f)
@@ -82,7 +86,7 @@ def _load_model_data():
     # Try per-model diagnostics files
     slugs = {'AlexNet': 'alexnet', 'VGG16': 'vgg16', 'ResNet50': 'resnet50'}
     for name, slug in slugs.items():
-        path = os.path.join(PROJECT_ROOT, f'{slug}_reliability_diagnostics.json')
+        path = os.path.join(RESULTS_DIR, f'{slug}_reliability_diagnostics.json')
         if os.path.exists(path):
             with open(path) as f:
                 entry = json.load(f)
@@ -97,7 +101,7 @@ def _load_model_data():
         return models
 
     # Fall back to legacy reliability_results.json
-    legacy = os.path.join(PROJECT_ROOT, 'reliability_results.json')
+    legacy = os.path.join(PROJECT_ROOT, 'reliability_results.json')  # legacy fallback at root
     if os.path.exists(legacy):
         with open(legacy) as f:
             data = json.load(f)
@@ -269,8 +273,8 @@ def generate_chart(models_data):
 
     fig.tight_layout()
 
-    png_path = os.path.join(PROJECT_ROOT, 'reliability_weight_sensitivity.png')
-    pdf_path = os.path.join(PROJECT_ROOT, 'reliability_weight_sensitivity.pdf')
+    png_path = os.path.join(FIGURES_DIR, 'reliability_weight_sensitivity.png')
+    pdf_path = os.path.join(FIGURES_DIR, 'reliability_weight_sensitivity.pdf')
     fig.savefig(png_path, dpi=300, bbox_inches='tight')
     fig.savefig(pdf_path, bbox_inches='tight')
     plt.close(fig)

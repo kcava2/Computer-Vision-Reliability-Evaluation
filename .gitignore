@@ -5,12 +5,9 @@ data/
 trained models/*.pth
 
 # Generated output
+results/
+figures/
 reliability_results.json
-*_reliability_scores.json
-*_reliability_diagnostics.json
-all_models_reliability_*.json
-reliability_weight_sensitivity.png
-reliability_weight_sensitivity.pdf
 
 # Python bytecode
 __pycache__/

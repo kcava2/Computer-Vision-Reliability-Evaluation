@@ -25,6 +25,8 @@ warnings.filterwarnings('ignore', category=DeprecationWarning, module='torchvisi
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 MODELS_DIR = os.path.join(PROJECT_ROOT, 'trained models')
 RELIABILITY_DIR = os.path.join(PROJECT_ROOT, 'reliability backend')
+RESULTS_DIR = os.path.join(PROJECT_ROOT, 'results')
+os.makedirs(RESULTS_DIR, exist_ok=True)
 
 sys.path.insert(0, PROJECT_ROOT)
 sys.path.insert(0, MODELS_DIR)
@@ -312,8 +314,8 @@ if __name__ == '__main__':
         diag_dict = _build_diagnostics_dict(cfg['name'], results, dataset_info)
 
         print(f'\n  Writing output files for {cfg["name"]} ...')
-        _write_json(os.path.join(PROJECT_ROOT, f'{slug}_reliability_scores.json'), scores_dict)
-        _write_json(os.path.join(PROJECT_ROOT, f'{slug}_reliability_diagnostics.json'), diag_dict)
+        _write_json(os.path.join(RESULTS_DIR, f'{slug}_reliability_scores.json'), scores_dict)
+        _write_json(os.path.join(RESULTS_DIR, f'{slug}_reliability_diagnostics.json'), diag_dict)
 
         all_scores.append(scores_dict)
         all_diagnostics.append(diag_dict)
@@ -323,7 +325,7 @@ if __name__ == '__main__':
     # ------------------------------------------------------------------
     if all_scores:
         print('\nWriting combined output files ...')
-        _write_json(os.path.join(PROJECT_ROOT, 'all_models_reliability_scores.json'), all_scores)
-        _write_json(os.path.join(PROJECT_ROOT, 'all_models_reliability_diagnostics.json'), all_diagnostics)
+        _write_json(os.path.join(RESULTS_DIR, 'results_overview.json'), all_scores)
+        _write_json(os.path.join(RESULTS_DIR, 'all_models_reliability_diagnostics.json'), all_diagnostics)
     else:
         print('\nNo models were evaluated. Train at least one model and re-run.')
