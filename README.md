@@ -57,13 +57,13 @@ VGGNet on CIFAR-100
 
 *Results coming soon!*
 
+ResNet on CIFAR-100
+
+*Results coming soon!*
+
 ## Future Implementations
 
 - More statistical analysis of metrics
 - Sensitivity analysis of metrics
 - More dataset testing
 - Diagnostic analysis
-
-ResNet on CIFAR-100
-
-*Results coming soon!*
