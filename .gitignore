@@ -4,9 +4,7 @@ data/
 # Trained model weights — too large for GitHub (>100 MB)
 trained models/*.pth
 
-# Generated output
-results/
-figures/
+# Generated output (legacy single-file format)
 reliability_results.json
 
 # Python bytecode

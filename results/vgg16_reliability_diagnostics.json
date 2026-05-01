@@ -1,0 +1,104 @@
+{
+  "model": "VGG16",
+  "dataset": "CIFAR-100",
+  "failure_rates": {
+    "P_F_baseline": 0.2998,
+    "P_F_shifted": 0.4748,
+    "P_F_perturbed": 0.4087,
+    "K_baseline": 2998,
+    "K_shifted": 4748,
+    "K_perturbed": 4087
+  },
+  "dataset_conditions": {
+    "baseline": "Clean CIFAR-100 test set",
+    "durability": "FFT low-frequency reconstruction radius=8",
+    "availability": "Stochastic pixel-space degradation",
+    "spectral_shift": {
+      "HF_energy_baseline": 0.012530659438521304,
+      "HF_energy_shifted": 1.9246289144059714e-14
+    },
+    "transform_distribution": {
+      "gaussian": {
+        "count": 979,
+        "pct": 9.8
+      },
+      "motion_blur+brightness": {
+        "count": 1011,
+        "pct": 10.1
+      },
+      "gaussian+rotation": {
+        "count": 956,
+        "pct": 9.6
+      },
+      "gaussian+motion_blur": {
+        "count": 1046,
+        "pct": 10.5
+      },
+      "motion_blur+rotation": {
+        "count": 959,
+        "pct": 9.6
+      },
+      "brightness": {
+        "count": 1022,
+        "pct": 10.2
+      },
+      "gaussian+brightness": {
+        "count": 1031,
+        "pct": 10.3
+      },
+      "brightness+rotation": {
+        "count": 982,
+        "pct": 9.8
+      },
+      "motion_blur": {
+        "count": 1043,
+        "pct": 10.4
+      },
+      "rotation": {
+        "count": 971,
+        "pct": 9.7
+      }
+    }
+  },
+  "P_s_diagnostics": {
+    "w_I": 0.5,
+    "w_II": 0.5
+  },
+  "DS_diagnostics": {
+    "degradation_ratio": 0.5837224816544362
+  },
+  "DepS_diagnostics": {
+    "c_bar": 0.8108198965445161,
+    "VaR_0_95": 0.17526859990209337,
+    "CVaR_0_95": 0.1835789564395944,
+    "ECE": 0.11061989654451605
+  },
+  "QoTS_diagnostics": {
+    "theta": 0.9,
+    "K_critical": 494,
+    "best_fit_distribution": "gamma",
+    "AIC_weibull": 3949.1231607204218,
+    "AIC_gamma": 3945.032699644032,
+    "AIC_lognormal": 3946.5933538997397,
+    "beta_w": 1.067171017028058,
+    "eta": 20.736338743417747,
+    "mean_inter_critical_interval": 20.18052738336714,
+    "AD_statistic": 12.095274433799773,
+    "failure_mechanism": "Failure mechanism (gamma): increasing hazard (alpha=1.174)",
+    "beta_w_note": "Weibull shape parameter reported as reference. QoTS computed using best-fit distribution (gamma)."
+  },
+  "AS_diagnostics": {
+    "P_F_D_tilde": 0.4087,
+    "delta_Ps_AS": 0.1089,
+    "delta_interpretation": "P_s > AS: reliability degrades under stochastic degradation"
+  },
+  "statistical_tests": {
+    "mann_whitney_stat": 7863296.5,
+    "mann_whitney_p": 7.11254756170736e-15,
+    "mann_whitney_significant": true
+  },
+  "bootstrap": {
+    "n_resamples": 1000,
+    "confidence_level": 0.95
+  }
+}

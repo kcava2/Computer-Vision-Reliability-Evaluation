@@ -274,12 +274,9 @@ def generate_chart(models_data):
     fig.tight_layout()
 
     png_path = os.path.join(FIGURES_DIR, 'reliability_weight_sensitivity.png')
-    pdf_path = os.path.join(FIGURES_DIR, 'reliability_weight_sensitivity.pdf')
     fig.savefig(png_path, dpi=300, bbox_inches='tight')
-    fig.savefig(pdf_path, bbox_inches='tight')
     plt.close(fig)
     print(f'Chart saved: {os.path.basename(png_path)}  (300 dpi)')
-    print(f'Chart saved: {os.path.basename(pdf_path)}  (PDF)')
 
 
 # -----------------------------------------------------------------------
