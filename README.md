@@ -44,22 +44,37 @@ Availability $= 1 - P(F \mid \tilde{D})$
 ## Results 
 
 AlexNet on CIFAR-100
+
 | Sub-Metric | Score | 95% CI |
 |---|---|---|
 | Probability Score | 0.5960 | [0.5856, 0.6054] |
-| Durability Score | 0.7829 | [0.7600, 0.8045] |
+| Durability Score | 0.9480 | [0.9349, 0.9600] |
 | Dependability Score | 0.3975 | [0.3951, 0.3998] |
 | Quality Score | 0.3490 | [0.3449, 0.6969] |
 | Availability Score | 0.5051 | [0.4949, 0.5142] |
-| **MRS** | **0.4847** | [0.4828, 0.5636] |
+| **MRS** | **0.4954** | [0.4935, 0.5792] |
 
 VGGNet on CIFAR-100
 
-*Results coming soon!*
+| Sub-Metric | Score | 95% CI |
+|---|---|---|
+| Probability Score | 0.7002 | [0.6912, 0.7084] |
+| Durability Score | 0.4163 | [0.3761, 0.4554] |
+| Dependability Score | 0.4082 | [0.4061, 0.4105] |
+| Quality Score | 0.7061 | [0.3359, 0.9092] |
+| Availability Score | 0.5913 | [0.5823, 0.6008] |
+| **MRS** | **0.5326** | [0.4636, 0.5543] |
 
 ResNet on CIFAR-100
 
-*Results coming soon!*
+| Sub-Metric | Score | 95% CI |
+|---|---|---|
+| Probability Score | 0.7377 | [0.7294, 0.7458] |
+| Durability Score | 0.6401 | [0.6044, 0.6758] |
+| Dependability Score | 0.4297 | [0.4278, 0.4315] |
+| Quality Score | 0.7420 | [0.3416, 0.8426] |
+| Availability Score | 0.6255 | [0.6158, 0.6349] |
+| **MRS** | **0.6104** | [0.5078, 0.6227] |
 
 ## Future Implementations
 
