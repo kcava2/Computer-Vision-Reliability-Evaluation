@@ -1,4 +1,4 @@
-# Computer Vision Reliability Evaluation
+# Reliability-Based Evaluation of Computer Vision Models Under Uncertainty
 
 Standard ML metrics such as accuracy, F1, and AUC measure how often a model is wrong, but they do not characterize *how* or *why* it fails. Knowing the how and why of failures is critical for aerospace systems. This framework reframes misclassification as a **failure event** to produce safety-relevant metrics that accuracy alone cannot provide specifically for computer vision.
 
